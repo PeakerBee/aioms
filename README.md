@@ -1,5 +1,5 @@
-# python Micro Service Framework
-基于tornado一个微服务基础框架
+# AsyncIO Micro Service Framework
+基于tornado的一个微服务基础框架 
 ## Introduce
 
 使用python做web开发面临的一个最大的问题就是性能，在解决C10K问题上显的有点吃力。有些异步框架Tornado、Twisted、Gevent 等就是为了解决性能问题。这些框架在性能上有些提升，且异步框架并发性只是在IO密集型业务有优势，对于CPU密集业务优势也并不是很明显，同时由于是使用异步函数和我们平时同步开发逻辑有些许不同，说以会出现各种古怪的问题难以解决。
