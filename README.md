@@ -1,4 +1,4 @@
-# AsyncIO Micro Service Framework
+# Asyncio Micro Service Framework
 基于tornado的一个微服务基础框架 
 ## Introduce
 
@@ -12,7 +12,7 @@
 * **使用asyncio为核心引擎，使tornado在很多情况下单机单进程并发甚至不亚于Golang，Java。**
 * **1.0版本，微服务之间的RPC是基于redis创建的消息总线，利用消息总线进行RPC**
 * **2.0版本，使用AsyncHTTPClient作为http client，使用http协议进行微服务之间的RPC。**
-* **参考Java Spring Cloud，也开发了限流，熔断等功能，利用责任链模式动态接入网关中提高系统稳定性**
+* **参考Java Spring Cloud，开发集成限流，熔断等功能，利用责任链模式动态接入网关，提高系统稳定性**
 * **使用Zookeeper作为协调服务器，进行服务动态注册发现和下线**
 * **使用skywalking为分布式追踪系统。记录微服务之间的调用链**
 * **使用unittest做单元测试，并且使用mock来避免访问其他微服务。**
