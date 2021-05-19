@@ -3,18 +3,15 @@ import json
 from concurrent.futures.thread import ThreadPoolExecutor
 from typing import List
 
-from loguru import logger
+
 from tornado.concurrent import run_on_executor
 from tornado.web import RequestHandler, HTTPError
 
-from ycyj_zhongtai import WorkerName
-from ycyj_zhongtai.gateway.app.exception import VersionFormatError, AppGWException
-from ycyj_zhongtai.gateway.filter.definition import GatewayFilterChain, GatewayFilter
-from ycyj_zhongtai.gateway.route.definition import Route
-from ycyj_zhongtai.gateway.route.locator import RouteLocator
-from ycyj_zhongtai.gateway.web.http import ServerWebExchange, DefaultServerWebExchange, TornadoServerHttpRequest, \
-    TornadoServerHttpResponse, GATEWAY_ROUTE_ATTR, MICRO_SERVICE_NAME, REQUEST_METHOD_NAME, MICRO_SERVICE_VERSION
-from ycyj_zhongtai.libs.exception.api_exception import ApiFormatErrorException, ApiException
+from gateway.exceptions import VersionFormatError, ApiFormatErrorException, GWException
+from gateway.filter.definition import GatewayFilterChain, GatewayFilter
+from gateway.web.http import TornadoServerHttpRequest, TornadoServerHttpResponse, DefaultServerWebExchange, \
+    MICRO_SERVICE_NAME, REQUEST_METHOD_NAME, MICRO_SERVICE_VERSION, GATEWAY_ROUTE_ATTR, ServerWebExchange
+from logger.log import gen_log
 
 
 class RequestForwardingHandler(RequestHandler):
@@ -58,7 +55,7 @@ class RequestForwardingHandler(RequestHandler):
             self.web_handler.handle(server_web_exchange)
             return server_http_response.get_response_body()
         except Exception as ex:
-            if isinstance(ex, AppGWException) or isinstance(ex, ApiException):
+            if isinstance(ex, GWException):
                 state_val = ex.state
             elif isinstance(ex, HTTPError):
                 raise ex
@@ -66,9 +63,9 @@ class RequestForwardingHandler(RequestHandler):
                 state_val = 0
             r_dict = {'State': state_val, 'Msg': str(ex), 'Data': ''}
             if state_val == 0:
-                logger.exception(ex)  # 只有未知异常才记录，其他异常记录警告日志
+                gen_log.exception(ex)  # 只有未知异常才记录，其他异常记录警告日志
             else:
-                logger.warning(ex)
+                gen_log.warning(ex)
 
             r_str = json.dumps(r_dict, ensure_ascii=False)
             return r_str
@@ -82,7 +79,7 @@ class RequestForwardingHandler(RequestHandler):
         await self.finish(res)
 
     async def head(self):
-        await self.finish(WorkerName.AppGateWay)
+        await self.finish('GateWay')
 
     async def options(self):
         """

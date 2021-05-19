@@ -1,6 +1,6 @@
 from typing import List
 
-from ycyj_zhongtai.gateway.route.definition import RouteDefinition, Route
+from gateway.route.definition import RouteDefinition, Route
 
 
 class RouteLocator:

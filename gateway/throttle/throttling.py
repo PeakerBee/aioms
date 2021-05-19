@@ -1,9 +1,12 @@
 import time
 
-from loguru import logger
+
 from redis import Redis
+from logger.log import gen_log
 
-
+"""
+GateWay 限流实现模块
+"""
 class BaseThrottle:
     """
        Rate throttling of requests.
@@ -96,7 +99,7 @@ class TokenBucketThrottle(BaseThrottle):
         cmd = self.redis.register_script(TokenBucketThrottle.Lua)
         timestamp = int(round(time.time() * 1000))
         result = cmd([key], [TokenBucketThrottle.ReplenishRate, TokenBucketThrottle.BurstCapacity, TokenBucketThrottle.TokenReqPerTime, timestamp])
-        logger.debug(result)
+        gen_log.debug(result)
         if len(result) > 0:
             if result[0] == 1:
                 return self.throttle_success()

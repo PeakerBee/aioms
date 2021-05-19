@@ -1,7 +1,7 @@
 from typing import List
 
-from ycyj_zhongtai.libs.discovery.event import WatchedEvent
-from ycyj_zhongtai.libs.discovery.instance import ServiceInstance
+from discovery.event import WatchedEvent
+from discovery.instance import ServiceInstance
 
 
 class DiscoveryClient:

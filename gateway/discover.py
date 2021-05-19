@@ -1,19 +1,16 @@
 import json
 import threading
 
-from loguru import logger
 from typing import Dict, List
 from kazoo.client import KazooClient
 from kazoo.protocol.states import KazooState
 from kazoo.client import ChildrenWatch
 
-from ycyj_zhongtai.libs.discovery.event import WatchedEvent, ServiceWatchedEvent
-from ycyj_zhongtai.libs.discovery.instance import ServiceCache, ZookeeperServiceInstance
-from ycyj_zhongtai.libs.discovery.service import ServiceDiscovery
-from ycyj_zhongtai.gateway.route.definition import RouteDefinition
-from ycyj_zhongtai.gateway.route.locator import RouteDefinitionLocator
-from ycyj_zhongtai.libs.discovery.instance import ServiceInstance
-from ycyj_zhongtai.libs.discovery.service import DiscoveryClient
+from discovery.event import WatchedEvent, ServiceWatchedEvent
+from discovery.instance import ServiceCache, ServiceInstance, ZookeeperServiceInstance
+from discovery.service import ServiceDiscovery, DiscoveryClient
+from gateway.route.definition import RouteDefinition
+from gateway.route.locator import RouteDefinitionLocator
 
 
 class ZookeeperServiceCache(ServiceCache):

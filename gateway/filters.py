@@ -4,16 +4,14 @@ from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPClientError
 from tornado.httputil import HTTPHeaders
 from tornado.web import HTTPError
 
-from ycyj_zhongtai.gateway.app.exception import RouteTypeError, ThrottleError
-from ycyj_zhongtai.gateway.app.loadbalancer import RandomRule
-from ycyj_zhongtai.gateway.filter.definition import GatewayFilter, GatewayFilterChain
-from ycyj_zhongtai.gateway.route.definition import RouteType
-from ycyj_zhongtai.gateway.throttle.throttling import TokenBucketThrottle
-
-from ycyj_zhongtai.gateway.web.http import ServerWebExchange, GATEWAY_ROUTE_ATTR, GATEWAY_REQUEST_ROUTE_ATTR, \
-    REQUEST_METHOD_NAME, MICRO_SERVICE_NAME
-from ycyj_zhongtai.libs.exception.api_exception import ApiNotFoundException
-from ycyj_zhongtai.libs.rpc.redis_rpc.redis import YCYJRedisClient
+from gateway.exceptions import RouteTypeError, ThrottleError, ApiNotFoundException
+from gateway.loadbalancer import RandomRule
+from gateway.filter.definition import GatewayFilter, GatewayFilterChain
+from gateway.route.definition import RouteType
+from gateway.throttle.throttling import TokenBucketThrottle
+from gateway.web.http import GATEWAY_REQUEST_ROUTE_ATTR, REQUEST_METHOD_NAME, GATEWAY_ROUTE_ATTR, MICRO_SERVICE_NAME, \
+    ServerWebExchange
+from rpc.redis_rpc.redis import RedisClient
 
 
 class ForwardRoutingFilter(GatewayFilter):
@@ -89,7 +87,7 @@ class LoadBalancerClientFilter(GatewayFilter):
 class RequestRateLimiterGatewayFilter(GatewayFilter):
 
     def __init__(self):
-        self.throttling = TokenBucketThrottle(YCYJRedisClient())
+        self.throttling = TokenBucketThrottle(RedisClient())
 
     def filter(self, exchange: 'ServerWebExchange', chain: 'GatewayFilterChain'):
         route = exchange.get_attributes(GATEWAY_REQUEST_ROUTE_ATTR)

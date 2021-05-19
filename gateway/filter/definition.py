@@ -1,4 +1,4 @@
-from ycyj_zhongtai.gateway.web.http import ServerWebExchange
+from gateway.web.http import ServerWebExchange
 
 
 class GatewayFilter:

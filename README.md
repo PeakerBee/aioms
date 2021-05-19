@@ -19,3 +19,12 @@
 * **使用pydoc自动生成API文档。由于Tornado对Swagger API支持的并不是很好，后续会研究看看有什么解决方案将Swagger API接入，这样就可以把接口文档同步到接口平台上**
 
 ## Usage
+python3.7+ 环境 使用tornado为基础框架进行扩展
+
+### 安装依赖包
+
+python -m pip install --upgrade pip -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+python -m pip install -r reqs.txt -i https://mirrors.aliyun.com/pypi/simple
+
+python -m pip freeze > reqs.txt  
