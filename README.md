@@ -14,7 +14,7 @@
 * **2.0版本，使用AsyncHTTPClient作为http client，使用http协议进行微服务之间的RPC。**
 * **参考Java Spring Cloud，开发集成限流，熔断等功能，利用责任链模式动态接入网关，提高系统稳定性**
 * **使用Zookeeper作为协调服务器，进行服务动态注册发现和下线**
-* **使用skywalking为分布式追踪系统。记录微服务之间的调用链**
+* **使用skywalking为分布式追踪系统，记录微服务之间的调用链**
 * **使用unittest做单元测试，并且使用mock来避免访问其他微服务。**
 * **使用pydoc自动生成API文档。由于Tornado对Swagger API支持的并不是很好，后续会研究看看有什么解决方案将Swagger API接入，这样就可以把接口文档同步到接口平台上**
 
