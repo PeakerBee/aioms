@@ -2,10 +2,12 @@
 
 import json
 import uuid
-from loguru import logger
-from ycyj_zhongtai.libs.rpc.http_rpc.rpc import rpc_proxy as http_rpc_proxy, ClusterRpcProxy
-from ycyj_zhongtai.libs.rpc.redis_rpc.redis import Redis
-from ycyj_zhongtai.libs.rpc.redis_rpc.exceptions import NoRedisCreatedError, MethodFormatError
+
+from redis import Redis
+
+from logger.log import gen_log
+from rpc.http_rpc.rpc import http_rpc_proxy
+from rpc.redis_rpc.exceptions import NoRedisCreatedError, MethodFormatError
 
 
 class RpcClient:
@@ -34,7 +36,7 @@ class RpcClient:
                    'method': method,
                    'params': params_val}
 
-        logger.debug('request = {}'.format(request))
+        gen_log.debug('request = {}'.format(request))
         if resp is not None and 'sw6' in resp:
             request['sw6'] = resp['sw6']
         self.redis.lpush(queue_name, json.dumps(request))
@@ -60,7 +62,7 @@ class RpcClientProxy(RpcClient):
         """
 
         if self.redis is None:
-            logger.info('redis don‘t be created')
+            gen_log.info('redis don‘t be created')
             raise NoRedisCreatedError('redis don‘t be none')
 
         methods = method.split('/')[1:]
@@ -74,7 +76,6 @@ class RpcClientProxy(RpcClient):
 
         id = self.send_request(None, queue_name, request_method, *params, **kwargs)
         jstr = self.get_response(id, timeout=15)
-        # logger.info(jstr)
         return jstr
 
 

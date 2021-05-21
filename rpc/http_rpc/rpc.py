@@ -4,12 +4,13 @@ import threading
 from typing import List
 
 from tornado.httpclient import HTTPClient
-from ycyj_zhongtai.gateway.app.loadbalancer import RandomRule
-from ycyj_zhongtai.libs.discovery.event import ServiceWatchedEvent
-from ycyj_zhongtai.libs.discovery.instance import ServiceInstance
-from ycyj_zhongtai.libs.discovery.service import DiscoveryClient
-from ycyj_zhongtai.libs.rpc.http_rpc.discovery import ZookeeperDiscoveryClient
-from ycyj_zhongtai.libs.zookeeper.client import ZookeeperMicroClient
+
+from discovery.event import ServiceWatchedEvent
+from discovery.instance import ServiceInstance
+from discovery.service import DiscoveryClient
+from gateway.loadbalancer import RandomRule
+from rpc.http_rpc.discovery import ZookeeperDiscoveryClient
+from zookeeper.client import ZookeeperMicroClient
 
 
 class RouteDefinition:
@@ -123,4 +124,4 @@ class MethodProxy(object):
         return service_name == route.route_id
 
 
-rpc_proxy = ClusterRpcProxy()
+http_rpc_proxy = ClusterRpcProxy()

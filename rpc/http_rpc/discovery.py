@@ -1,14 +1,14 @@
 import json
-from typing import List
+from typing import List, Dict
 
 from kazoo.client import KazooClient
 from kazoo.protocol.states import KazooState
 from kazoo.recipe.watchers import ChildrenWatch
 
-from ycyj_zhongtai.gateway.app.discovery import ZookeeperServiceCache
-from ycyj_zhongtai.libs.discovery.event import WatchedEvent
-from ycyj_zhongtai.libs.discovery.instance import ServiceInstance, ZookeeperServiceInstance
-from ycyj_zhongtai.libs.discovery.service import ServiceDiscovery, DiscoveryClient
+from discovery.event import WatchedEvent
+from discovery.instance import ZookeeperServiceInstance, ServiceInstance
+from discovery.service import ServiceDiscovery, DiscoveryClient
+from gateway.discover import ZookeeperServiceCache
 
 
 class ZookeeperServiceDiscovery(ServiceDiscovery):

@@ -7,31 +7,31 @@ loggers:
   aioms.access:
     level: INFO
     handlers: [access]
-    propagate: yes
+    propagate: no
   aioms.application:
     level: INFO
-    handlers: [console, application]
-    propagate: yes
+    handlers: [application]
+    propagate: no
   aioms.general:
     level: INFO
     handlers: [console, general]
-    propagate: yes
+    propagate: no
 
 formatters:
   simple:
     format: '%(asctime)s - %(levelname)s - %(thread)d - %(filename)s:%(lineno)d - %(message)s'
   timedRotating:
-    format: '%(asctime)s -%(levelname)8s - %(thread)12d - %(filename)s:%(lineno)d  %(message)s'
+    format: '%(asctime)s - %(levelname)s - %(thread)d - %(filename)s:%(lineno)d  %(message)s'
 
 handlers:
   console:
     class: logging.StreamHandler
-    level: DEBUG
+    level: INFO
     formatter: simple
 
   access:
     class: logging.handlers.RotatingFileHandler
-    level: DEBUG
+    level: INFO
     formatter: simple
     filename: 'logs/aioms.access.log'
     maxBytes: 209715200  # 200 * 1024 * 1024
@@ -40,15 +40,15 @@ handlers:
   application:
     class: logging.handlers.RotatingFileHandler
     level: INFO
-    formatter: timedRotating
+    formatter: simple
     filename: 'logs/aioms.application.log'
     maxBytes: 204800
     backupCount: 5
 
   general:
     class: logging.handlers.RotatingFileHandler
-    level: DEBUG
+    level: INFO
     formatter: simple
-    filename: 'logs/aioms.log'
+    filename: 'logs/aioms.gen.log'
     maxBytes: 204800
     backupCount: 5

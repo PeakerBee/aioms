@@ -1,5 +1,6 @@
 import functools
 import json
+import threading
 from concurrent.futures.thread import ThreadPoolExecutor
 from typing import List
 
@@ -30,6 +31,7 @@ class RequestForwardingHandler(RequestHandler):
     @run_on_executor()
     def handle_request(self):
         try:
+            gen_log.warning(f'handle_request current_thread = {threading.current_thread().ident}')
             server_http_request = TornadoServerHttpRequest(self.request)
             server_http_response = TornadoServerHttpResponse(self)
             server_web_exchange = DefaultServerWebExchange(server_http_request, server_http_response)
@@ -71,7 +73,9 @@ class RequestForwardingHandler(RequestHandler):
             return r_str
 
     async def get(self):
+        gen_log.warning(f'get 1 current_thread = {threading.current_thread().ident}')
         res = await self.handle_request()
+        gen_log.warning(f'get 2 current_thread = {threading.current_thread().ident}')
         await self.finish(res)
 
     async def post(self):

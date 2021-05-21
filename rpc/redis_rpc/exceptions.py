@@ -9,7 +9,7 @@ class NoRedisCreatedError(Exception):
     pass
 
 
-class ParaFormatError(Exception):
+class ParamFormatError(Exception):
     pass
 
 

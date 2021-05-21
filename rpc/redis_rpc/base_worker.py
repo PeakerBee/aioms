@@ -16,6 +16,7 @@ from ycyj_zhongtai.libs.rpc.redis_rpc.exceptions import ParaFormatError
 from ycyj_zhongtai.libs.rpc.redis_rpc.redis import YCYJRedisClient
 from ycyj_zhongtai.libs.value_convert_type_ext import to_bool
 
+
 def no_reg(func):
     """
     不进行服务注册
@@ -80,8 +81,6 @@ class WorkerRegister:
         node_iter.visit_FunctionDef = visit_FunctionDef
         node_iter.visit(ast.parse(inspect.getsource(target)))
         return methods
-
-
 
     def _set_service(self):
         # 设置服务注册
@@ -257,7 +256,6 @@ class BaseWorker(WorkerRegister):
             logger.exception(ex)
 
 
-
 class ServiceWorker(BaseWorker):
     """
     服务worker，添加一层，控制连接地址
@@ -292,13 +290,12 @@ class WorkerName:
     YCYJF10ApiDev = 'F10ApiDev'  # F10 模块测试
     YCYJF10Server = 'F10Server'
 
-
     YCYJGongShiApi = 'GongShiApi'  # 公式数据
     YCYJGongShiServer = 'GongShiServer'
 
     YCYJHQApi = 'HQApi'  # 行情数据
     YCYJHQServer = 'HQServer'
-    YCYJHQSocket = 'HQSocket'  #web socket
+    YCYJHQSocket = 'HQSocket'  # web socket
 
     YCYJTradeApi = 'TradeApi'  # 交易模块
     YCYJTradeServer = 'TradeServer'

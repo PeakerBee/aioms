@@ -7,12 +7,14 @@ from tornado.routing import AnyMatches, Rule
 from tornado.web import RequestHandler
 from exception.definition import CommonException
 from exception.error_code import CommonErrorCode
+from gateway.config import ZookeeperMicroServicePath
+from gateway.discover import ZookeeperDiscoveryClient, DiscoveryClientRouteDefinitionLocator
 from gateway.filters import LoadBalancerClientFilter, AuthGatewayFilter, RequestRateLimiterGatewayFilter, \
     ForwardRoutingFilter
 from gateway.handler import FilteringWebHandler, RequestForwardingHandler
 from gateway.route.locator import RouteDefinitionRouteLocator
 from logger.log import gen_log
-
+from zookeeper.client import ZookeeperMicroClient
 
 
 class Gateway:
@@ -46,11 +48,8 @@ class AppGateway(Gateway):
 
     def __init__(self):
         super(AppGateway, self).__init__()
-        from gateway.discover import ZookeeperDiscoveryClient
-        from zookeeper.client import ZookeeperMicroClient
-        from gateway.config import ZookeeperMicroServicePath
-        self.discovery_client = ZookeeperDiscoveryClient(ZookeeperMicroClient(hosts='mse-d3db8e90-p.zk.mse.aliyuncs.com'), root_path=ZookeeperMicroServicePath)
-        from gateway.discover import DiscoveryClientRouteDefinitionLocator
+        self.discovery_client = ZookeeperDiscoveryClient(
+            ZookeeperMicroClient(hosts='mse-d3db8e90-p.zk.mse.aliyuncs.com'), root_path=ZookeeperMicroServicePath)
         self.route_definition_locator = DiscoveryClientRouteDefinitionLocator(self.discovery_client)
         self.route_locator = RouteDefinitionRouteLocator(route_def_locator=self.route_definition_locator)
         filters = [AuthGatewayFilter(), LoadBalancerClientFilter(),

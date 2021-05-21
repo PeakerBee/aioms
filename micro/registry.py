@@ -1,6 +1,6 @@
 import json
 
-from ycyj_zhongtai.libs.discovery.service import ServiceProvider
+from discovery.service import ServiceProvider
 
 
 class ZookeeperServiceRegistry(ServiceProvider):
