@@ -90,7 +90,7 @@ Aioms对API请求做了全异步化处理，请求通过Tornado IO线程异步�
 * **使用Zookeeper作为协调服务器，进行服务动态注册发现和下线**
 * **使用skywalking为分布式追踪系统，记录微服务之间的调用链**
 * **使用pydoc自动生成API文档。由于Tornado对Swagger API支持的并不是很好，后续会研究看看有什么解决方案将Swagger API接入，这样就可以把接口文档同步到接口平台上**
-* **目前还有很多功能处于开发完善中，希望有更多牛逼的人参与完善中。**
+
 
 ## 四、Usage
 &emsp;&emsp;python3.7+ 环境 使用tornado为基础框架进行扩展开发
@@ -102,3 +102,9 @@ Aioms对API请求做了全异步化处理，请求通过Tornado IO线程异步�
 &emsp;&emsp;python -m pip install -r reqs.txt -i https://mirrors.aliyun.com/pypi/simple
 
 &emsp;&emsp;python -m pip freeze > reqs.txt  
+
+## 五、特别说明
+
+目前还有很多功能处于开发完善中，希望有更多牛逼的人参与完善中。
+
+整个文档由于个人语言文字表达能力有限，很多都参考了美团技术关于微服务网关架构的文章[百亿规模API网关服务Shepherd的设计与实现](https://tech.meituan.com/2021/05/20/shepherd-api-gateway.html)。这边文章算是我见过的最好的一边关于微服务网关架构的文章，其中还有很多其他内容如灰度，监控，自动生成DSL等等大家可以看看很有启发性。
