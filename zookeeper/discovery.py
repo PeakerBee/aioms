@@ -45,14 +45,14 @@ class ZookeeperServiceCache(ServiceCache):
 class ZookeeperServiceInstance(ServiceInstance):
 
     def __init__(self, instance_id: str, service_id: str, host: str, port: int,
-                 route_type: int, version: int = 50000,
+                 rpc_type: int, version: int = 50000,
                  metadata: Dict[str, str] = None):
         self.instance_id = instance_id
         self.service_id = service_id
         self.host = host
         self.port = port
         self.version = version
-        self.route_type = route_type
+        self.rpc_type = rpc_type
         self.metadata = metadata
 
     def get_instance_id(self) -> str:
@@ -73,8 +73,8 @@ class ZookeeperServiceInstance(ServiceInstance):
     def get_version(self) -> int:
         return self.version
 
-    def get_route_type(self) -> int:
-        return self.route_type
+    def get_rpc_type(self) -> int:
+        return self.rpc_type
 
 
 class ZookeeperServiceDiscovery(ServiceDiscovery):

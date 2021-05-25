@@ -39,7 +39,7 @@ class ServiceInstance(object):
         """
         raise NotImplementedError()
 
-    def get_route_type(self):
+    def get_rpc_type(self):
         """
         :return: The Micro access type 1:http, 2:rpc
         """
@@ -86,7 +86,7 @@ class DefaultServiceInstance(ServiceInstance):
         self.host = host
         self.port = port
         self.version = version
-        self.route_type = route_type
+        self.rpc_type = rpc_type
         self.metadata = metadata
 
     def get_instance_id(self):
@@ -107,6 +107,6 @@ class DefaultServiceInstance(ServiceInstance):
     def get_version(self) -> int:
         return self.version
 
-    def get_route_type(self) -> int:
-        return self.route_type
+    def get_rpc_type(self) -> int:
+        return self.rpc_type
 

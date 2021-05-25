@@ -26,6 +26,9 @@ C:具体错误编号，自增即可，一个项目999种错误应该够用；
       001 通用错误
       002 接口不存在
 
+
+将错误码统一放到一起，没有放到各个模块是为了好维护，为了让大家知道那些错误码已经被使用
+若是后续业务复杂了，就需要放到各个模块进行违法，这样子代码冲突就会少很多
 """
 
 
@@ -50,7 +53,8 @@ class CommonErrorCode(ErrorCode):
     ApiFormat_Error = (200004, 'GateWay', '接口格式不正确')
     PortNoSetting_Error = (200005, 'GateWay', 'PORT没有设置')
     HandlerNoSetting_Error = (200006, 'GateWay', 'Handler没有设置')
-    NameNoSetting_Error = (200006, 'GateWay', 'Service Name没有设置')
+    NameNoSetting_Error = (200007, 'GateWay', 'Service Name没有设置')
+    Rpc_Type_Error = (200008, 'GateWay', '路由类型错误')
 
 
 class GWErrorCode(ErrorCode):
@@ -62,5 +66,9 @@ class GWErrorCode(ErrorCode):
     Api_Timeout_Error = (201005, 'GateWay', '接口请求超时')
     Version_Format_Error = (201006, 'GateWay', '接口版本号格式错误')
     Version_Num_Too_Low_Error = (201007, 'GateWay', '接口版本号太低')
-    Route_Type_Error = (201008, 'GateWay', '路由类型错误')
-    Throttle_Error = (201009, 'GateWay', '访问高峰期...')
+    Throttle_Error = (201008, 'GateWay', '访问高峰期...')
+
+
+class RPCErrorCode(ErrorCode):
+    General_Error = (202001, 'GateWay', '通用错误')
+    Service_Not_Found_Error = (202002, 'RPC', '服务没有发现')

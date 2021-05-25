@@ -10,6 +10,12 @@ These streams may be configured independently using the standard library's
 """
 
 import logging
+import os
+from logging import config
+import yaml
+
+log_config = yaml.load(open('{}/logging.yaml'.format(os.path.abspath(os.path.dirname(__file__))), 'r'), Loader=yaml.FullLoader)
+config.dictConfig(log_config)
 
 access_log = logging.getLogger("aioms.access")
 app_log = logging.getLogger("aioms.application")

@@ -4,30 +4,30 @@ from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPClientError
 from tornado.httputil import HTTPHeaders
 from tornado.web import HTTPError
 
-from gateway.exceptions import RouteTypeError, ThrottleError, ApiNotFoundException
+from gateway.exceptions import RpcTypeError, ThrottleError, ApiNotFoundException
 from gateway.loadbalancer import RandomRule
 from gateway.filter.definition import GatewayFilter, GatewayFilterChain
-from gateway.route.definition import RouteType
+from gateway.route.definition import RpcType
 from gateway.throttle.throttling import TokenBucketThrottle
 from gateway.web import GATEWAY_REQUEST_ROUTE_ATTR, REQUEST_METHOD_NAME, GATEWAY_ROUTE_ATTR, MICRO_SERVICE_NAME, \
     ServerWebExchange
-from rpc.redis_rpc.redis import RedisClient
+from rpc.redis.redis import RedisClient
 
 
 class ForwardRoutingFilter(GatewayFilter):
 
     def filter(self, exchange: 'ServerWebExchange', chain: 'GatewayFilterChain'):
         route = exchange.get_attributes(GATEWAY_REQUEST_ROUTE_ATTR)
-        if route.route_type == RouteType.HTTP:
+        if route.rpc_type == RpcType.HTTP:
             http_routing_filter = HttpRoutingFilter()
             http_routing_filter.filter(exchange=exchange, chain=chain)
             chain.filter(exchange)
-        elif route.route_type == RouteType.REDIS_RPC:
+        elif route.rpc_type == RpcType.REDIS_RPC:
             rpc_route_filter = RpcRoutingFilter()
             rpc_route_filter.filter(exchange=exchange, chain=chain)
             chain.filter(exchange)
         else:
-            raise RouteTypeError()
+            raise RpcTypeError()
 
 
 class HttpRoutingFilter(GatewayFilter):

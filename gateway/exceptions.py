@@ -22,8 +22,8 @@ class ApiNotFoundException(GWException):
         return self.msg
 
 
-class RouteTypeError(GWException):
-    def __init__(self, error_code=GWErrorCode.Route_Type_Error):
+class RpcTypeError(GWException):
+    def __init__(self, error_code=CommonErrorCode.Rpc_Type_Error):
         super(GWException, self).__init__(error_code)
 
 
