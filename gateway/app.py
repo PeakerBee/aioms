@@ -49,7 +49,7 @@ class AppGateway(Gateway):
     def __init__(self):
         super(AppGateway, self).__init__()
         self.discovery_client = ZookeeperDiscoveryClient(
-            ZookeeperMicroClient(hosts='mse-d3db8e90-p.zk.mse.aliyuncs.com'), root_path=ZookeeperMicroServicePath)
+            ZookeeperMicroClient(hosts='localhost'), root_path=ZookeeperMicroServicePath)
         self.route_definition_locator = DiscoveryClientRouteDefinitionLocator(self.discovery_client)
         self.route_locator = RouteDefinitionRouteLocator(route_def_locator=self.route_definition_locator)
         filters = [AuthGatewayFilter(), LoadBalancerClientFilter(),
