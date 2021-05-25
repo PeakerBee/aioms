@@ -30,6 +30,7 @@ class RouteType(Enum):
 
 Handlers = Union[_RuleList, List[Any]]
 
+
 class Application(ABC):
 
     def __init__(
@@ -104,7 +105,6 @@ class HttpServer(Application):
 
 
 class RpcServer(Application):
-
 
     def __init__(
             self,

@@ -9,7 +9,7 @@ from gateway.loadbalancer import RandomRule
 from gateway.filter.definition import GatewayFilter, GatewayFilterChain
 from gateway.route.definition import RouteType
 from gateway.throttle.throttling import TokenBucketThrottle
-from gateway.web.http import GATEWAY_REQUEST_ROUTE_ATTR, REQUEST_METHOD_NAME, GATEWAY_ROUTE_ATTR, MICRO_SERVICE_NAME, \
+from gateway.web import GATEWAY_REQUEST_ROUTE_ATTR, REQUEST_METHOD_NAME, GATEWAY_ROUTE_ATTR, MICRO_SERVICE_NAME, \
     ServerWebExchange
 from rpc.redis_rpc.redis import RedisClient
 

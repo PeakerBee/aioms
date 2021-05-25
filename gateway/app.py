@@ -8,13 +8,13 @@ from tornado.web import RequestHandler
 from exception.definition import CommonException
 from exception.error_code import CommonErrorCode
 from gateway.config import ZookeeperMicroServicePath
-from gateway.discover import ZookeeperDiscoveryClient, DiscoveryClientRouteDefinitionLocator
 from gateway.filters import LoadBalancerClientFilter, AuthGatewayFilter, RequestRateLimiterGatewayFilter, \
     ForwardRoutingFilter
 from gateway.handler import FilteringWebHandler, RequestForwardingHandler
-from gateway.route.locator import RouteDefinitionRouteLocator
+from gateway.route.locator import RouteDefinitionRouteLocator, DiscoveryClientRouteDefinitionLocator
 from logger.log import gen_log
 from zookeeper.client import ZookeeperMicroClient
+from zookeeper.discovery import ZookeeperDiscoveryClient
 
 
 class Gateway:

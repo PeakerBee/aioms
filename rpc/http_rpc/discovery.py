@@ -6,9 +6,9 @@ from kazoo.protocol.states import KazooState
 from kazoo.recipe.watchers import ChildrenWatch
 
 from discovery.event import WatchedEvent
-from discovery.instance import ZookeeperServiceInstance, ServiceInstance
+from discovery.instance import ServiceInstance
 from discovery.service import ServiceDiscovery, DiscoveryClient
-from gateway.discover import ZookeeperServiceCache
+from zookeeper.discovery import ZookeeperServiceCache, ZookeeperServiceInstance
 
 
 class ZookeeperServiceDiscovery(ServiceDiscovery):

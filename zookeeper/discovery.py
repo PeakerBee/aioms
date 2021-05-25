@@ -1,16 +1,18 @@
+# coding=utf-8
+"""
+@Time : 2021/5/25 13:21 
+@Author : Peaker
+"""
 import json
-import threading
+from typing import List, Dict
 
-from typing import Dict, List
 from kazoo.client import KazooClient
 from kazoo.protocol.states import KazooState
-from kazoo.client import ChildrenWatch
+from kazoo.recipe.watchers import ChildrenWatch
 
-from discovery.event import WatchedEvent, ServiceWatchedEvent
-from discovery.instance import ServiceCache, ServiceInstance, ZookeeperServiceInstance
+from discovery.event import WatchedEvent
+from discovery.instance import ServiceCache, ServiceInstance
 from discovery.service import ServiceDiscovery, DiscoveryClient
-from gateway.route.definition import RouteDefinition
-from gateway.route.locator import RouteDefinitionLocator
 
 
 class ZookeeperServiceCache(ServiceCache):
@@ -38,6 +40,41 @@ class ZookeeperServiceCache(ServiceCache):
 
     def set_watch(self, watch: 'ChildrenWatch'):
         self.watch = watch
+
+
+class ZookeeperServiceInstance(ServiceInstance):
+
+    def __init__(self, instance_id: str, service_id: str, host: str, port: int,
+                 route_type: int, version: int = 50000,
+                 metadata: Dict[str, str] = None):
+        self.instance_id = instance_id
+        self.service_id = service_id
+        self.host = host
+        self.port = port
+        self.version = version
+        self.route_type = route_type
+        self.metadata = metadata
+
+    def get_instance_id(self) -> str:
+        return self.instance_id
+
+    def get_service_id(self) -> str:
+        return self.service_id
+
+    def get_host(self) -> str:
+        return self.host
+
+    def get_port(self) -> int:
+        return self.port
+
+    def get_meta_data(self) -> Dict[str, str]:
+        return self.metadata
+
+    def get_version(self) -> int:
+        return self.version
+
+    def get_route_type(self) -> int:
+        return self.route_type
 
 
 class ZookeeperServiceDiscovery(ServiceDiscovery):
@@ -146,43 +183,3 @@ class ZookeeperDiscoveryClient(DiscoveryClient):
 
     def get_services(self) -> List[str]:
         return self.service_discovery.query_for_names()
-
-
-class DiscoveryClientRouteDefinitionLocator(RouteDefinitionLocator):
-
-    def __init__(self, discovery_client: 'DiscoveryClient'):
-        self.discovery_client = discovery_client
-        self.services = discovery_client.get_services()
-        self.service_instances = list()  # type: List[ServiceInstance]
-        self._run_lock = threading.Lock()
-        for service in self.services:
-            instances = discovery_client.get_instances(service)  # type: List[ServiceInstance]
-            if instances:
-                self.service_instances.extend(instances)
-        self.route_definitions = list(map(self._create_route_definition, self.service_instances))
-
-        watcher = ServiceWatchedEvent(func=self.service_watch_event)
-        self.discovery_client.add_watch(watcher)
-
-    def service_watch_event(self):
-        with self._run_lock:
-            services = self.discovery_client.get_services()
-            service_instances = list()  # type: List[ServiceInstance]
-            for service in services:
-                instances = self.discovery_client.get_instances(service)  # type: List[ServiceInstance]
-                if instances:
-                    service_instances.extend(instances)
-            route_definitions = list(map(self._create_route_definition, service_instances))
-            self.service_instances = service_instances
-            self.route_definitions = route_definitions
-            self.services = services
-
-    def get_route_definitions(self) -> List[RouteDefinition]:
-        with self._run_lock:
-            return self.route_definitions
-
-    def _create_route_definition(self, instance: 'ServiceInstance'):
-        service_id = instance.get_service_id()
-        uri = f'{instance.get_host()}:{instance.get_port()}'
-        route_definition = RouteDefinition(route_id=service_id, uri=uri)
-        return route_definition

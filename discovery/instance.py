@@ -110,37 +110,3 @@ class DefaultServiceInstance(ServiceInstance):
     def get_route_type(self) -> int:
         return self.route_type
 
-
-class ZookeeperServiceInstance(ServiceInstance):
-
-    def __init__(self, instance_id: str, service_id: str, host: str, port: int,
-                 route_type: int, version: int = 50000,
-                 metadata: Dict[str, str] = None):
-        self.instance_id = instance_id
-        self.service_id = service_id
-        self.host = host
-        self.port = port
-        self.version = version
-        self.route_type = route_type
-        self.metadata = metadata
-
-    def get_instance_id(self) -> str:
-        return self.instance_id
-
-    def get_service_id(self) -> str:
-        return self.service_id
-
-    def get_host(self) -> str:
-        return self.host
-
-    def get_port(self) -> int:
-        return self.port
-
-    def get_meta_data(self) -> Dict[str, str]:
-        return self.metadata
-
-    def get_version(self) -> int:
-        return self.version
-
-    def get_route_type(self) -> int:
-        return self.route_type
