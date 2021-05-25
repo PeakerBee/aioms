@@ -103,7 +103,8 @@ class MethodProxy(object):
         if route.rpc_type == RpcType.HTTP:
             return http.request(route=route, method_name=self.method_name, kwargs=kwargs)
         elif route.route_type == RpcType.REDIS_RPC:
-            return redis.request(route=route, service_name=self.service_name, method_name=self.method_name, kwargs=kwargs)
+            return redis.request(route=route, service_name=self.service_name,
+                                 method_name=self.method_name, kwargs=kwargs)
         else:
             raise CommonException(error_code=CommonErrorCode.Rpc_Type_Error)
 

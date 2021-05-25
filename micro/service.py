@@ -45,7 +45,7 @@ class Application(ABC):
     ) -> None:
         self.handlers = handlers
         self.default_application = web.Application(self.handlers, settings=settings)
-        self.service_registry = ZookeeperServiceRegistry(zookeeper=ZookeeperMicroClient(), root_path=root_path)
+        self.service_registry = ZookeeperServiceRegistry(zookeeper=ZookeeperMicroClient(hosts='localhost'), root_path=root_path)
         self.service_name = name
         self.port = port
         self.address = address

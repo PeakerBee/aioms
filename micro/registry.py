@@ -19,17 +19,3 @@ class ZookeeperServiceRegistry(ServiceProvider):
 
     def stop(self) -> None:
         self.zookeeper.stop()
-
-
-# class ServiceRegistry(ServiceProvider):
-#
-#     def __init__(self, default_registry: 'ServiceProvider') -> None:
-#         if default_registry is None:
-#             raise Exception()
-#         self.default_registry = default_registry
-#
-#     def register_service(self, service: 'ServiceInstance') -> None:
-#         self.default_registry.register_service(service)
-#
-#     def start(self) -> None:
-#         self.default_registry.start()

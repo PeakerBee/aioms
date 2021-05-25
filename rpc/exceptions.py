@@ -17,8 +17,3 @@ class MSNotFoundError(AbsException):
 
     def __str__(self):
         return self.msg
-
-
-class RouteTypeError(AbsException):
-    def __init__(self, error_code=GWErrorCode.Rpc_Type_Error):
-        super(GWException, self).__init__(error_code)
