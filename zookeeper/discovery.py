@@ -129,8 +129,10 @@ class ZookeeperServiceDiscovery(ServiceDiscovery):
                     host = service_instance.get('host')
                     port = service_instance.get('port')
                     version = service_instance.get('version')
+                    rpc_type = service_instance.get('rpc_type')
                     service_instance = ZookeeperServiceInstance(service_id=service_name, instance_id=instance_id,
-                                                                host=host, port=port, version=version)
+                                                                host=host, port=port,
+                                                                version=version, rpc_type=rpc_type)
                     service_instances.append(service_instance)
 
                 service = self.service_nodes.get(service_id)

@@ -11,7 +11,7 @@ from gateway.route.definition import RpcType
 from gateway.throttle.throttling import TokenBucketThrottle
 from gateway.web import GATEWAY_REQUEST_ROUTE_ATTR, REQUEST_METHOD_NAME, GATEWAY_ROUTE_ATTR, MICRO_SERVICE_NAME, \
     ServerWebExchange
-from rpc.redis.redis import RedisClient
+from rpc.redis import RedisClient
 
 
 class ForwardRoutingFilter(GatewayFilter):

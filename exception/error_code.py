@@ -55,6 +55,7 @@ class CommonErrorCode(ErrorCode):
     HandlerNoSetting_Error = (200006, 'GateWay', 'Handler没有设置')
     NameNoSetting_Error = (200007, 'GateWay', 'Service Name没有设置')
     Rpc_Type_Error = (200008, 'GateWay', '路由类型错误')
+    Discovery_Conf_Not_Setting_Error = (200009, 'GateWay', '服务发现配置没有设置')
 
 
 class GWErrorCode(ErrorCode):

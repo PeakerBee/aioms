@@ -10,8 +10,8 @@ from tornado.web import RequestHandler, HTTPError
 
 from gateway.exceptions import VersionFormatError, ApiFormatErrorException, GWException
 from gateway.filter.definition import GatewayFilterChain, GatewayFilter
-from gateway.web.http import TornadoServerHttpRequest, TornadoServerHttpResponse, DefaultServerWebExchange, \
-    MICRO_SERVICE_NAME, REQUEST_METHOD_NAME, MICRO_SERVICE_VERSION, GATEWAY_ROUTE_ATTR, ServerWebExchange
+from gateway.web import TornadoServerHttpRequest, DefaultServerWebExchange, TornadoServerHttpResponse, \
+    MICRO_SERVICE_NAME, REQUEST_METHOD_NAME, MICRO_SERVICE_VERSION, GATEWAY_ROUTE_ATTR
 from logger.log import gen_log
 
 

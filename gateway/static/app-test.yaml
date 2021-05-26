@@ -1,0 +1,12 @@
+server:
+  port: 80
+
+
+application:
+  name: GateWay
+
+
+  discovery:
+    name: zookeeper  # 或者是 Eureka  Consul Nacos ...
+    url: localhost:2181  #注册中心的url
+    root_path: /test/micro-service  #root path
