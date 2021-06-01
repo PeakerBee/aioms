@@ -1,9 +1,6 @@
-server:
-  port: 80
-
-
 application:
   name: GateWay
+  port: 80
 
 
   discovery:

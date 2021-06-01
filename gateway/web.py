@@ -3,11 +3,12 @@
 @Time : 2021/5/25 13:28 
 @Author : Peaker
 """
-
+import collections
+import typing
 from http.cookies import Morsel, SimpleCookie
-from typing import Dict, Union, Any
+from typing import Dict, Union, Any, List, Iterator
 
-from tornado.httputil import HTTPServerRequest, HTTPHeaders
+from tornado.httputil import HTTPServerRequest, HTTPHeaders, HTTPFile
 from tornado.web import RequestHandler
 
 GATEWAY_ROUTE_ATTR = 'gatewayRoute'
@@ -32,6 +33,10 @@ class ServerWebExchange:
         raise NotImplementedError()
 
 
+class ServerHTTPHeaders(dict):
+    pass
+
+
 class ServerHttpRequest:
 
     def get_path(self) -> str:
@@ -48,6 +53,12 @@ class ServerHttpRequest:
     def get_query(self):
         raise NotImplementedError()
 
+    def get_body(self) -> str:
+        raise NotImplementedError()
+
+    def get_files(self) -> Any:
+        raise NotImplementedError()
+
     """
     get http method type such as Get, Post, Head
     """
@@ -55,8 +66,11 @@ class ServerHttpRequest:
     def get_method_name(self):
         raise NotImplementedError()
 
-    def get_header(self) -> HTTPHeaders:
+    def get_origin_header(self) -> Any:
         raise NotImplementedError()
+
+    def get_header(self) -> ServerHTTPHeaders:
+        pass
 
 
 class ServerHttpResponse:
@@ -98,6 +112,10 @@ class DefaultServerWebExchange(ServerWebExchange):
 
     def set_attributes(self, name: str, value: Any):
         self.attributes[name] = value
+
+
+class TornadoServerHttpHeaders(ServerHTTPHeaders):
+    pass
 
 
 class TornadoServerHttpResponse(ServerHttpResponse):
@@ -143,8 +161,23 @@ class TornadoServerHttpRequest(ServerHttpRequest):
     def get_query(self):
         return self.http_request.query
 
-    def get_header(self):
+    def get_origin_header(self) -> 'HTTPHeaders':
         return self.http_request.headers
+
+    def get_header(self) -> 'ServerHTTPHeaders':
+
+        origin_header = self.get_origin_header().get_all()
+        header = TornadoServerHttpHeaders()
+        for key, value in origin_header:
+            if key != 'Host' and key != 'If Modified Since ':
+                header[key] = value
+        return header
+
+    def get_body(self):
+        return self.http_request.body
+
+    def get_files(self) -> Dict[str, List["HTTPFile"]]:
+        return self.http_request.files
 
     """
     get http method type such as Get, Post, Head

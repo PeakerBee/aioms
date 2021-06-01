@@ -16,10 +16,11 @@ class RpcType(Enum):
 
 
 class RouteDefinition:
-    def __init__(self, route_id: str, uri: str, rpc_type: 'RpcType'):
+    def __init__(self, route_id: str, uri: str, rpc_type: 'RpcType', version='v1'):
         self.route_id = route_id
         self.uri = uri
         self.rpc_type = rpc_type
+        self.version = version
 
 
 class RedisRpcRouteDefinition(RouteDefinition):

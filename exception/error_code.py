@@ -56,6 +56,8 @@ class CommonErrorCode(ErrorCode):
     NameNoSetting_Error = (200007, 'GateWay', 'Service Name没有设置')
     Rpc_Type_Error = (200008, 'GateWay', '路由类型错误')
     Discovery_Conf_Not_Setting_Error = (200009, 'GateWay', '服务发现配置没有设置')
+    Rpc_Conf_Not_Setting_Error = (200010, 'GateWay', 'Rpc方式没有进行配置')
+    Redis_Conf_Not_Setting_Error = (200011, 'GateWay', 'Redis没有进行配置')
 
 
 class GWErrorCode(ErrorCode):
@@ -68,6 +70,7 @@ class GWErrorCode(ErrorCode):
     Version_Format_Error = (201006, 'GateWay', '接口版本号格式错误')
     Version_Num_Too_Low_Error = (201007, 'GateWay', '接口版本号太低')
     Throttle_Error = (201008, 'GateWay', '访问高峰期...')
+    Discovery_Not_Setting_Error = (201009, 'GateWay', '服务发现没有配置')
 
 
 class RPCErrorCode(ErrorCode):

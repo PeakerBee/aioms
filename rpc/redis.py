@@ -21,7 +21,7 @@ class RedisClient(Redis):
 def request(route: 'RedisRpcRouteDefinition', service_name, method_name, **kwargs) -> str:
     host = route.uri
     redis = RedisClient(host=host, password=route.password, username=route.user)
-    queue_name = 'work:{}:{}'.format(service_name, method_name)
+    queue_name = 'work:{}:{}'.format(service_name, route.version)
 
     id = str(uuid.uuid4())
 

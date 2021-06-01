@@ -2,6 +2,11 @@ import threading
 from typing import List
 
 from discovery.event import ServiceWatchedEvent
+from exception.definition import CommonException
+from exception.error_code import CommonErrorCode
+from gateway.context import ApplicationContext
+from gateway.exceptions import DiscoveryNotSettingError
+from gateway.factory import DiscoveryFactory
 from gateway.route.definition import RouteDefinition, Route
 
 
@@ -34,13 +39,23 @@ class RouteDefinitionRouteLocator(RouteLocator):
 
 class DiscoveryClientRouteDefinitionLocator(RouteDefinitionLocator):
 
-    def __init__(self, discovery_client: 'DiscoveryClient'):
-        self.discovery_client = discovery_client
-        self.services = discovery_client.get_services()
+    def __init__(self, app_context: 'ApplicationContext'):
+        discovery_config = app_context.get_discovery_config()
+
+        if discovery_config is None:
+            raise CommonException(error_code=CommonErrorCode.Discovery_Conf_Not_Setting_Error)
+
+        discovery_factory = DiscoveryFactory()
+        self.discovery_client = discovery_factory.apply(discovery_config)
+
+        if self.discovery_client is None:
+            raise DiscoveryNotSettingError()
+
+        self.services = self.discovery_client.get_services()
         self.service_instances = list()  # type: List[ServiceInstance]
         self._run_lock = threading.Lock()
         for service in self.services:
-            instances = discovery_client.get_instances(service)  # type: List[ServiceInstance]
+            instances = self.discovery_client.get_instances(service)  # type: List[ServiceInstance]
             if instances:
                 self.service_instances.extend(instances)
         self.route_definitions = list(map(self._create_route_definition, self.service_instances))

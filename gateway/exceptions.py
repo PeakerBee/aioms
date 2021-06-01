@@ -13,6 +13,12 @@ class GWException(AbsException):
         super(GWException, self).__init__(error_code)
 
 
+class DiscoveryNotSettingError(GWException):
+    
+    def __init__(self, error_code=GWErrorCode.Discovery_Not_Setting_Error):
+        super(DiscoveryNotSettingError, self).__init__(error_code=error_code)
+        
+
 class ApiNotFoundException(GWException):
     def __init__(self, api_name=''):
         super(ApiNotFoundException, self).__init__(error_code=CommonErrorCode.ApiNotFound_Error)

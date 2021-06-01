@@ -12,8 +12,6 @@ from gateway.loadbalancer import RandomRule
 from rpc import http, redis
 from rpc.exceptions import MSNotFoundError
 from rpc.route import RouteDefinition, RpcType, RouteFactory
-from zookeeper.client import ZookeeperMicroClient
-from zookeeper.discovery import ZookeeperDiscoveryClient
 
 
 class RpcContext(object):
@@ -57,9 +55,9 @@ class RpcContext(object):
             return self.route_definitions
 
 
-class _ClusterRpcProxy(object):
-    def __init__(self):
-        self._ctx = RpcContext(ZookeeperDiscoveryClient(ZookeeperMicroClient(), root_path='/micro-service'))
+class ClusterRpcProxy(object):
+    def __init__(self, discovery_client: 'DiscoveryClient'):
+        self._ctx = RpcContext(discovery_client=discovery_client)
         self._proxies = dict()
 
     def __getattr__(self, name):
@@ -103,14 +101,11 @@ class MethodProxy(object):
         if route.rpc_type == RpcType.HTTP:
             return http.request(route=route, method_name=self.method_name, kwargs=kwargs)
         elif route.route_type == RpcType.REDIS_RPC:
-            return redis.request(route=route, service_name=self.service_name,
-                                 method_name=self.method_name, kwargs=kwargs)
+            return redis.request(route=route, service_name=self.service_name, method_name=self.method_name,
+                                 kwargs=kwargs)
         else:
             raise CommonException(error_code=CommonErrorCode.Rpc_Type_Error)
 
     @staticmethod
     def look_up_route(service_name: str, route: 'RouteDefinition'):
         return service_name == route.route_id
-
-
-rpc_proxy = _ClusterRpcProxy()

@@ -1,12 +1,11 @@
-server:
-  port: 80
-
-
 application:
   name: GateWay
+  port: 80
 
 
   discovery:
     name: zookeeper  # 或者是 Eureka  Consul Nacos ...
     url: localhost:2181  #注册中心的url
+    user: peaker
+    password: peaker
     root_path: /dev/micro-service  #root path
