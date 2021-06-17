@@ -6,7 +6,8 @@
 """
 from typing import Any
 
-from gateway.config import DiscoveryConfig
+from ctx.config import DiscoveryConfig
+from discovery.service import DiscoveryClient
 from zookeeper.client import ZookeeperMicroClient
 from zookeeper.discovery import ZookeeperDiscoveryClient
 

@@ -8,11 +8,12 @@ from tornado import web
 from tornado.ioloop import IOLoop
 from tornado.routing import _RuleList
 
-from discovery.instance import ZookeeperServiceInstance, ServiceInstance
+from discovery.instance import ServiceInstance
 from exception.definition import CommonException
 from exception.error_code import CommonErrorCode
-from micro.registry import ZookeeperServiceRegistry
-from zookeeper.client import ZookeeperMicroClient
+from micro.context import create_app_context
+from micro.factory import ServiceRegistryFactory
+from zookeeper.discovery import ZookeeperServiceInstance
 
 
 def get_local_ip():
@@ -28,28 +29,37 @@ class RouteType(Enum):
     REDIS_RPC = 2
 
 
-Handlers = Union[_RuleList, List[Any]]
-
-
 class Application(ABC):
 
     def __init__(
             self,
             handlers: _RuleList = None,
-            name: str = None,
             address: str = '0.0.0.0',
-            port: int = 0,
-            root_path: str = '/micro-service',
-            version: int = 50000,
+            config_path: 'str' = None,
             **settings: Any
     ) -> None:
         self.handlers = handlers
         self.default_application = web.Application(self.handlers, settings=settings)
-        self.service_registry = ZookeeperServiceRegistry(zookeeper=ZookeeperMicroClient(hosts='localhost'), root_path=root_path)
-        self.service_name = name
-        self.port = port
+        if config_path is None:
+            raise Exception('ddd')
+
+        self.context = create_app_context(config_path)
+
+        discovery_config = self.context.get_discovery_config()
+
+        if discovery_config is None:
+            raise CommonException(error_code=CommonErrorCode.Discovery_Conf_Not_Setting_Error)
+
+        service_provider_factory = ServiceRegistryFactory()
+        self.service_registry = service_provider_factory.apply(discovery_config)
+
+        if self.service_registry is None:
+            raise Exception('dddd')
+
+        self.service_name = self.context.get_app_name()
+        self.port = self.context.get_port()
         self.address = address
-        self.version = version
+        self.version = self.context.get_version()
 
     def start(self) -> None:
 
@@ -72,24 +82,6 @@ class Application(ABC):
 
 class HttpServer(Application):
 
-    def __init__(
-            self,
-            handlers: _RuleList = None,
-            name: str = None,
-            address: str = '0.0.0.0',
-            port: int = 0,
-            root_path: str = '/micro-service',
-            version: int = 50000,
-            **settings: Any
-    ) -> None:
-        self.handlers = handlers
-        self.default_application = web.Application(settings=settings)
-        self.service_registry = ZookeeperServiceRegistry(zookeeper=ZookeeperMicroClient(), root_path=root_path)
-        self.service_name = name
-        self.port = port
-        self.address = address
-        self.version = version
-
     def create_service_instance(self) -> 'ServiceInstance':
         instance_id = str(uuid.uuid4())
         service_id = self.service_name
@@ -98,7 +90,7 @@ class HttpServer(Application):
         service = ZookeeperServiceInstance(instance_id=instance_id, service_id=service_id,
                                            host=host, port=port,
                                            version=self.version,
-                                           route_type=RouteType.HTTP.value,
+                                           rpc_type=RouteType.HTTP.value,
                                            metadata=dict())
 
         return service
@@ -106,33 +98,19 @@ class HttpServer(Application):
 
 class RpcServer(Application):
 
-    def __init__(
-            self,
-            handlers: _RuleList = None,
-            name: str = None,
-            address: str = '0.0.0.0',
-            port: int = 0,
-            root_path: str = '/micro-service',
-            version: int = 50000,
-            **settings: Any
-    ) -> None:
-        self.handlers = handlers
-        self.default_application = web.Application(self.handlers, settings=settings)
-        self.service_registry = ZookeeperServiceRegistry(zookeeper=ZookeeperMicroClient(), root_path=root_path)
-        self.service_name = name
-        self.port = port
-        self.address = address
-        self.version = version
-
     def create_service_instance(self) -> 'ServiceInstance':
         instance_id = str(uuid.uuid4())
         service_id = self.service_name
         host = get_local_ip()
         port = self.port
+        metadata = dict()
+        metadata['redis_host'] = self.context.get_redis_config().host
+        metadata['password'] = self.context.get_redis_config().password
+        metadata['user'] = self.context.get_redis_config().user
         service = ZookeeperServiceInstance(instance_id=instance_id, service_id=service_id,
                                            host=host, port=port,
                                            version=self.version,
-                                           route_type=RouteType.REDIS_RPC.value,
-                                           metadata=dict())
+                                           rpc_type=RouteType.REDIS_RPC.value,
+                                           metadata=metadata)
 
         return service

@@ -7,12 +7,11 @@ from typing import List
 from tornado.concurrent import run_on_executor
 from tornado.web import RequestHandler, HTTPError
 
-from gateway.context import ApplicationContext
 from gateway.exceptions import VersionFormatError, ApiFormatErrorException, GWException
 from gateway.filter.definition import GatewayFilterChain, GatewayFilter
 from gateway.web import TornadoServerHttpRequest, DefaultServerWebExchange, TornadoServerHttpResponse, \
-    MICRO_SERVICE_NAME, REQUEST_METHOD_NAME, MICRO_SERVICE_VERSION, GATEWAY_ROUTE_ATTR, ServerWebExchange, APP_CONTEXT
-from logger.log import gen_log
+    MICRO_SERVICE_NAME, REQUEST_METHOD_NAME, MICRO_SERVICE_VERSION, GATEWAY_ROUTE_ATTR, ServerWebExchange
+from logger.log import gen_log, app_log
 
 
 class RequestForwardingHandler(RequestHandler):

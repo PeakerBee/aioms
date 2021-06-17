@@ -1,6 +1,7 @@
 application:
   name: GateWay
   port: 80
+  version: 50000
 
   discovery:
     name: zookeeper  # 或者是 Eureka  Consul Nacos ...

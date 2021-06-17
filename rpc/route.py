@@ -37,9 +37,9 @@ class RouteFactory:
     def get_route(instance: 'ServiceInstance'):
         service_id = instance.get_service_id()
         uri = f'{instance.get_host()}:{instance.get_port()}'
-        if instance.get_rpc_type() == RpcType.HTTP:
+        if instance.get_rpc_type() == RpcType.HTTP.value:
             return RouteDefinition(route_id=service_id, uri=uri, rpc_type=instance.get_rpc_type())
-        elif instance.get_rpc_type() == RpcType.REDIS_RPC:
+        elif instance.get_rpc_type() == RpcType.REDIS_RPC.value:
             pwd = instance.get_meta_data().get('password')
             user = instance.get_meta_data().get('user')
             return RedisRpcRouteDefinition(route_id=service_id, uri=uri, rpc_type=instance.get_rpc_type(),

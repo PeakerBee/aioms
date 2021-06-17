@@ -9,8 +9,7 @@ from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPClientError
 from tornado.httputil import HTTPHeaders
 from tornado.web import HTTPError
 
-from gateway.app import Gateway
-from gateway.context import ApplicationContext
+from ctx.context import ApplicationContext
 from gateway.exceptions import RpcTypeError, ThrottleError, ApiNotFoundException
 from gateway.loadbalancer import RandomRule
 from gateway.filter.definition import GatewayFilter, GatewayFilterChain
@@ -56,7 +55,6 @@ class HttpRoutingFilter(GatewayFilter):
                 if key != 'Host' and key != 'If Modified Since ':
                     header.add(key, value)
             real_request_url = f'http://{host}/{method_name}?{query}'
-            # real_request_url = 'https://app-gw-test.365ycyj.com/HQApi/50000/GetStockJianPinList?ts=4d5459794d4459354e5467304f513d3d'
             http_client = AsyncHTTPClient()
             method = exchange.get_request().get_method_name()
             http_request = HTTPRequest(url=real_request_url, method=method.upper())
@@ -72,10 +70,22 @@ class HttpRoutingFilter(GatewayFilter):
 
 class RpcRoutingFilter(GatewayFilter):
 
+    def __init__(self):
+        self.redis_cache = None
+
     def filter(self, exchange: 'ServerWebExchange', chain: 'GatewayFilterChain'):
         route = exchange.get_attributes(GATEWAY_REQUEST_ROUTE_ATTR)
         host = route.uri
-        redis = RedisClient(host=host, password=route.password, username=route.user)
+
+        if self.redis_cache:
+            redis = RedisClient(host=host, password=route.password, username=route.user)
+            self.redis_cache[host] = redis
+        else:
+            redis = self.redis_cache.get(host)
+            if redis is None:
+                redis = RedisClient(host=host, password=route.password, username=route.user)
+                self.redis_cache[host] = redis
+
         service_name = exchange.get_attributes(MICRO_SERVICE_NAME)
         method_name = exchange.get_attributes(REQUEST_METHOD_NAME)
         version = route.version
@@ -88,9 +98,9 @@ class RpcRoutingFilter(GatewayFilter):
         if 'Content-Type' in headers and headers['Content-Type'] == 'application/json':
             if headers.get('Content-Encoding') == 'gzip' and isinstance(request.get_body(), bytes):
                 body = gzip.decompress(request.get_body()).decode('utf-8')
-            post_json_dic = json.loads(body)  # post 发送的json对象字典
-            for key in post_json_dic:
-                arg_dic[key.lower()] = post_json_dic[key]
+                post_json_dic = json.loads(body)  # post 发送的json对象字典
+                for key in post_json_dic:
+                    arg_dic[key.lower()] = post_json_dic[key]
         elif 'Content-Type' in headers and headers['Content-Type'].__contains__('xml'):
             http_body = request.get_body()
             xml = http_body.decode('utf-8')
@@ -137,8 +147,8 @@ class LoadBalancerClientFilter(GatewayFilter):
     def filter(self, exchange: 'ServerWebExchange', chain: 'GatewayFilterChain'):
         route = self.load_balancer_rule.choose(exchange.get_attributes(GATEWAY_ROUTE_ATTR))
 
-        # if route is None:
-        #     raise ApiNotFoundException(exchange.get_attributes(MICRO_SERVICE_NAME))
+        if route is None:
+            raise ApiNotFoundException(exchange.get_attributes(MICRO_SERVICE_NAME))
 
         exchange.set_attributes(GATEWAY_REQUEST_ROUTE_ATTR, route)
         chain.filter(exchange)

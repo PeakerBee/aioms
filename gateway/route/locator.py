@@ -2,12 +2,13 @@ import threading
 from typing import List
 
 from discovery.event import ServiceWatchedEvent
+from discovery.instance import ServiceInstance
 from exception.definition import CommonException
 from exception.error_code import CommonErrorCode
-from gateway.context import ApplicationContext
+from ctx.context import ApplicationContext
 from gateway.exceptions import DiscoveryNotSettingError
 from gateway.factory import DiscoveryFactory
-from gateway.route.definition import RouteDefinition, Route
+from gateway.route.definition import RouteDefinition, Route, RpcType, RouteFactory
 
 
 class RouteLocator:
@@ -81,7 +82,5 @@ class DiscoveryClientRouteDefinitionLocator(RouteDefinitionLocator):
             return self.route_definitions
 
     def _create_route_definition(self, instance: 'ServiceInstance'):
-        service_id = instance.get_service_id()
-        uri = f'{instance.get_host()}:{instance.get_port()}'
-        route_definition = RouteDefinition(route_id=service_id, uri=uri)
+        route_definition = RouteFactory.get_route(instance)
         return route_definition

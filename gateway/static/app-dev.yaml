@@ -8,4 +8,4 @@ application:
     url: localhost:2181  #注册中心的url
     user: peaker
     password: peaker
-    root_path: /dev/micro-service  #root path
+    root_path: /test/micro-service  #root path

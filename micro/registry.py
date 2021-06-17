@@ -1,5 +1,8 @@
 import json
 
+from kazoo.client import KazooClient
+
+from discovery.instance import ServiceInstance
 from discovery.service import ServiceProvider
 
 

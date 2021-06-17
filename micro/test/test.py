@@ -1,6 +1,6 @@
-from ycyj_zhongtai import WorkerName
-from ycyj_zhongtai.libs.api_handler import ApiHandler
-from ycyj_zhongtai.libs.micro.web import Application
+from tornado.web import RequestHandler
+
+from micro.service import Application
 
 
 def index():
@@ -9,8 +9,8 @@ def index():
 
 if __name__ == "__main__":
     handlers = [
-        (r"/", ApiHandler, {'func': index}),
+        (r"/", RequestHandler, {'func': index}),
     ]
 
-    application = Application(handlers=handlers, name=WorkerName.YCYJGongShiApi, root_path='/micro-service', port=803)
+    application = Application(handlers=handlers, name="User", root_path='/micro-service', port=803)
     application.start()
