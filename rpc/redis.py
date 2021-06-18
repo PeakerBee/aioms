@@ -2,7 +2,7 @@
 """
 @Time : 2021/5/25 14:18 
 @Author : Peaker
-@rpc: micro rpc by redis
+@rpc: mse rpc by redis
 """
 import json
 import uuid

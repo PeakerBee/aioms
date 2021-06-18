@@ -1,9 +1,8 @@
-import socket
 import uuid
 from abc import ABC
 from enum import Enum
 from http.server import HTTPServer
-from typing import Any, Union, List
+from typing import Any
 from tornado import web
 from tornado.ioloop import IOLoop
 from tornado.routing import _RuleList
@@ -11,17 +10,11 @@ from tornado.routing import _RuleList
 from discovery.instance import ServiceInstance
 from exception.definition import CommonException
 from exception.error_code import CommonErrorCode
-from micro.context import create_app_context
-from micro.factory import ServiceRegistryFactory
+from mse.context import create_app_context
+from mse.exceptions import ServiceRegistryError, ConfigNotSettingError
+from mse.factory import ServiceRegistryFactory
+from mse.utils import get_local_ip
 from zookeeper.discovery import ZookeeperServiceInstance
-
-
-def get_local_ip():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(('8.8.8.8', 80))
-    ip = s.getsockname()[0]
-    s.close()
-    return ip
 
 
 class RouteType(Enum):
@@ -41,7 +34,7 @@ class Application(ABC):
         self.handlers = handlers
         self.default_application = web.Application(self.handlers, settings=settings)
         if config_path is None:
-            raise Exception('ddd')
+            raise ConfigNotSettingError()
 
         self.context = create_app_context(config_path)
 
@@ -54,7 +47,7 @@ class Application(ABC):
         self.service_registry = service_provider_factory.apply(discovery_config)
 
         if self.service_registry is None:
-            raise Exception('dddd')
+            raise ServiceRegistryError()
 
         self.service_name = self.context.get_app_name()
         self.port = self.context.get_port()
@@ -96,21 +89,3 @@ class HttpServer(Application):
         return service
 
 
-class RpcServer(Application):
-
-    def create_service_instance(self) -> 'ServiceInstance':
-        instance_id = str(uuid.uuid4())
-        service_id = self.service_name
-        host = get_local_ip()
-        port = self.port
-        metadata = dict()
-        metadata['redis_host'] = self.context.get_redis_config().host
-        metadata['password'] = self.context.get_redis_config().password
-        metadata['user'] = self.context.get_redis_config().user
-        service = ZookeeperServiceInstance(instance_id=instance_id, service_id=service_id,
-                                           host=host, port=port,
-                                           version=self.version,
-                                           rpc_type=RouteType.REDIS_RPC.value,
-                                           metadata=metadata)
-
-        return service

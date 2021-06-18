@@ -74,5 +74,11 @@ class GWErrorCode(ErrorCode):
 
 
 class RPCErrorCode(ErrorCode):
-    General_Error = (202001, 'GateWay', '通用错误')
+    General_Error = (202001, 'RPC', '通用错误')
     Service_Not_Found_Error = (202002, 'RPC', '服务没有发现')
+
+
+class MseErrorCode(ErrorCode):
+    General_Error = (203001, 'Mse', '通用错误')
+    Service_Registry_Error = (203002, 'Mse', '服务注册没有创建')
+    Config_Not_Setting_Error = (203003, 'Mse', '配置文件没有设置')

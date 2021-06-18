@@ -11,7 +11,8 @@ class RpcType(Enum):
 
 
 class RouteDefinition:
-    def __init__(self, route_id: str, uri: str, route_type: 'RpcType' = RpcType.HTTP, throttling=False, version='v1'):
+    def __init__(self, route_id: str, uri: str, route_type: 'RpcType' = RpcType.HTTP,
+                 throttling=False, version='50000'):
         self.route_id = route_id
         self.uri = uri
         self.version = version
@@ -20,7 +21,8 @@ class RouteDefinition:
 
 
 class Route:
-    def __init__(self, route_id: str, uri: str, route_type: 'RpcType' = RpcType.HTTP, throttling=False, version='v1'):
+    def __init__(self, route_id: str, uri: str, route_type: 'RpcType' = RpcType.HTTP,
+                 throttling=False, version='50000'):
         self.route_id = route_id
         self.uri = uri
         self.version = version
@@ -31,7 +33,7 @@ class Route:
 class RedisRpcRouteDefinition(RouteDefinition):
 
     def __init__(self, route_id: str, uri: str, route_type: 'RpcType', password: 'str', user: 'str', version: 'str'):
-        super(RedisRpcRouteDefinition).__init__(route_id, uri, route_type)
+        super(RedisRpcRouteDefinition).__init__(route_id=route_id, uri=uri, route_type=route_type, version=version)
         self.password = password
         self.user = user
 
@@ -51,6 +53,7 @@ class RouteFactory:
             uri = instance.get_meta_data().get('redis_host')
             pwd = instance.get_meta_data().get('password')
             user = instance.get_meta_data().get('user')
-            return RedisRpcRouteDefinition(route_id=service_id, uri=uri, route_type=route_type, password=pwd, user=user, version=version)
+            return RedisRpcRouteDefinition(route_id=service_id, uri=uri, route_type=route_type,
+                                           password=pwd, user=user, version=version)
         else:
             raise CommonException(error_code=CommonErrorCode.Rpc_Type_Error)

@@ -6,4 +6,4 @@ application:
   discovery:
     name: zookeeper  # 或者是 Eureka  Consul Nacos ...
     url: localhost:2181  #注册中心的url
-    root_path: /test/micro-service  #root path
+    root_path: /test/mse-service  #root path

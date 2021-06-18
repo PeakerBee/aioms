@@ -7,7 +7,7 @@ from typing import Any
 
 from ctx.config import DiscoveryConfig
 from discovery.service import ServiceProvider
-from micro.registry import ZookeeperServiceRegistry
+from mse.registry import ZookeeperServiceRegistry
 from zookeeper.client import ZookeeperMicroClient
 
 

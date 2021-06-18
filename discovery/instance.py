@@ -63,7 +63,7 @@ class ServiceCache(object):
 
     def get_name(self) -> str:
         """
-        :return: The name of the micro service.
+        :return: The name of the mse service.
         """
         raise NotImplementedError()
 

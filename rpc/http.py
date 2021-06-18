@@ -2,7 +2,7 @@
 """
 @Time : 2021/5/25 14:17 
 @Author : Peaker
-@rpc: micro rpc by http
+@rpc: mse rpc by http
 """
 from tornado.httpclient import HTTPClient
 

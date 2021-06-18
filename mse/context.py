@@ -5,7 +5,7 @@
 """
 from ctx.config import CURRENT_ENV, DiscoveryConfig, RedisConfig
 from ctx.context import ConfApplicationContext
-from micro.config import ConfigOption
+from mse.config import ConfigOption
 
 
 class ApplicationContext(ConfApplicationContext):

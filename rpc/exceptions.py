@@ -9,7 +9,7 @@ from exception.error_code import RPCErrorCode
 
 class MSNotFoundError(AbsException):
     """
-    micro service not found
+    mse service not found
     """
     def __init__(self, service_name=''):
         super(MSNotFoundError, self).__init__(error_code=RPCErrorCode.Service_Not_Found_Error)
