@@ -5,7 +5,6 @@ from discovery.event import ServiceWatchedEvent
 from discovery.instance import ServiceInstance
 from exception.definition import CommonException
 from exception.error_code import CommonErrorCode
-from ctx.context import ApplicationContext
 from gateway.exceptions import DiscoveryNotSettingError
 from gateway.factory import DiscoveryFactory
 from gateway.route.definition import RouteDefinition, Route, RpcType, RouteFactory

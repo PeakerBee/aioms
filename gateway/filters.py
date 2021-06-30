@@ -9,7 +9,6 @@ from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPClientError
 from tornado.httputil import HTTPHeaders
 from tornado.web import HTTPError
 
-from ctx.context import ApplicationContext
 from gateway.exceptions import RpcTypeError, ThrottleError, ApiNotFoundException
 from gateway.loadbalancer import RandomRule
 from gateway.filter.definition import GatewayFilter, GatewayFilterChain

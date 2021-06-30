@@ -13,10 +13,6 @@ from zookeeper.discovery import ZookeeperServiceInstance
 
 class RpcServer(Application):
 
-
-
-
-
     def create_service_instance(self) -> 'ServiceInstance':
         instance_id = str(uuid.uuid4())
         service_id = self.service_name

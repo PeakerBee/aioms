@@ -6,7 +6,7 @@ from tornado.routing import AnyMatches, Rule
 from tornado.web import RequestHandler
 from exception.definition import CommonException
 from exception.error_code import CommonErrorCode
-from ctx.context import create_app_context
+from gateway.context import create_app_context
 from gateway.filters import LoadBalancerClientFilter, AuthGatewayFilter, RequestRateLimiterGatewayFilter, \
     ForwardRoutingFilter
 from gateway.handler import FilteringWebHandler, RequestForwardingHandler
