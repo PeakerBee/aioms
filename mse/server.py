@@ -1,20 +1,19 @@
-import uuid
+# coding=utf-8
+"""
+@Time : 2021/7/1 13:49 
+@Author : Peaker
+"""
 from abc import ABC
 from enum import Enum
 from http.server import HTTPServer
-from typing import Any
-from tornado import web
 from tornado.ioloop import IOLoop
-from tornado.routing import _RuleList
 
 from discovery.instance import ServiceInstance
 from exception.definition import CommonException
 from exception.error_code import CommonErrorCode
 from mse.context import create_app_context
-from mse.exceptions import ServiceRegistryError, ConfigNotSettingError
+from mse.exceptions import ConfigNotSettingError, ServiceRegistryError
 from mse.factory import ServiceRegistryFactory
-from mse.utils import get_local_ip
-from zookeeper.discovery import ZookeeperServiceInstance
 
 
 class RouteType(Enum):
@@ -24,15 +23,7 @@ class RouteType(Enum):
 
 class Application(ABC):
 
-    def __init__(
-            self,
-            handlers: _RuleList = None,
-            address: str = '0.0.0.0',
-            config_path: 'str' = None,
-            **settings: Any
-    ) -> None:
-        self.handlers = handlers
-        self.default_application = web.Application(self.handlers, settings=settings)
+    def __init__(self, config_path: 'str' = None) -> None:
         if config_path is None:
             raise ConfigNotSettingError()
 
@@ -51,7 +42,6 @@ class Application(ABC):
 
         self.service_name = self.context.get_app_name()
         self.port = self.context.get_port()
-        self.address = address
         self.version = self.context.get_version()
 
     def start(self) -> None:
@@ -65,27 +55,12 @@ class Application(ABC):
         IOLoop.instance().start()
 
     def listen(self) -> HTTPServer:
-        if self.port == 0:
-            raise CommonException(CommonErrorCode.PortNoSetting_Error)
-        return self.default_application.listen(port=self.port, address=self.address)
+        raise NotImplementedError()
 
     def create_service_instance(self) -> 'ServiceInstance':
         raise NotImplementedError()
 
 
-class HttpServer(Application):
 
-    def create_service_instance(self) -> 'ServiceInstance':
-        instance_id = str(uuid.uuid4())
-        service_id = self.service_name
-        host = get_local_ip()
-        port = self.port
-        service = ZookeeperServiceInstance(instance_id=instance_id, service_id=service_id,
-                                           host=host, port=port,
-                                           version=self.version,
-                                           rpc_type=RouteType.HTTP.value,
-                                           metadata=dict())
-
-        return service
 
 
