@@ -6,10 +6,14 @@
 
 
 class RpcServerRequest:
-    pass
+
+    def __init__(self, return_id: 'str' = None, method: 'str' = None, **kwargs: 'any'):
+        self.return_id = return_id
+        self.method = method
+        self.kwargs = kwargs
 
 
 class RpcMessageDelegate:
 
-    def data_received(self, chunk: 'bytes'):
-        pass
+    def execute(self):
+        raise NotImplementedError()
